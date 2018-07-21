@@ -1,0 +1,38 @@
+version: '2'
+networks:
+  proxy-tier:
+    external:
+      name: nginxproxy_proxy-tier
+
+services:
+  db:
+    image: postgres:9.5
+    environment:
+      - POSTGRES_PASSWORD=odoo
+      - POSTGRES_USER=odoo
+
+  odoo11:
+    image: odoo:11.0
+    depends_on:
+      - db
+    ports:
+      - "8085:8069"
+    tty: true
+    command: -- --dev=reload
+#    command: odoo scaffold /mnt/extra-addons/test_module
+    environment:
+      - VIRTUAL_PORT=8069
+#     - HTTPS_METHOD=nohttps
+      - VIRTUAL_HOST=kadernictviuslunce.cz, www.kadernictviuslunce.cz, kadernictviuslunce.dravom.cz
+      - LETSENCRYPT_HOST=kadernictviuslunce.cz, www.kadernictviuslunce.cz, kadernictviuslunce.dravom.cz
+      - LETSENCRYPT_EMAIL=alca@kadernictviuslunce.cz
+    volumes:
+      - ./o_addons:/mnt/extra-addons
+      - ./o_etc:/etc/odoo
+    networks:
+      - proxy-tier
+      - default
+
+volumes:
+  db:
+  odoo11:
