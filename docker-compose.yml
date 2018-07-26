@@ -1,8 +1,8 @@
 version: '2'
 networks:
-  proxy-tier:
+  default:
     external:
-      name: nginxproxy_proxy-tier
+      name: nginx-proxy
 
 services:
   db:
@@ -30,7 +30,6 @@ services:
       - ./o_addons:/mnt/extra-addons
       - ./o_etc:/etc/odoo
     networks:
-      - proxy-tier
       - default
 
 volumes:
